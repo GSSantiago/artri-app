@@ -20,7 +20,7 @@ class CongratulationsView extends StatelessWidget {
         leading: Padding(
           padding: const EdgeInsets.all(8.0),
           child: IconButton.outlined(
-            onPressed: () => context.canPop() ? context.pop() : context.go(''),
+            onPressed: () => context.canPop() ? context.pop() : context.push(''),
             style: ButtonStyle(
               side: WidgetStatePropertyAll(
                 const BorderSide(color: Colors.white, width: 2),

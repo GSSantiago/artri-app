@@ -25,7 +25,7 @@ class PhysicalExercisesViewModel extends ChangeNotifier {
   void handleTrainingTypeSelection(TrainingType type, BuildContext context) {
     _currentTrainingType = type;
 
-    context.go(_getRouteForTrainingType(type));
+    context.push(_getRouteForTrainingType(type));
   }
 
   String _getRouteForTrainingType(TrainingType type) {
@@ -59,7 +59,7 @@ class PhysicalExercisesViewModel extends ChangeNotifier {
 
     _queuedExercises = _queueExercises(exercises);
 
-    context.go('$currentPath/${difficulty.toString()}');
+    context.push('$currentPath/${difficulty.toString()}');
   }
 
   List<ExerciseQueued> _queueExercises(List<Exercise> exercises) {
@@ -85,13 +85,13 @@ class PhysicalExercisesViewModel extends ChangeNotifier {
     }
 
     if (currentExercise!.isLast) {
-      context.go(PhysicalExerciseRoutes.congratulations);
+      context.push(PhysicalExerciseRoutes.congratulations);
       return;
     }
 
     _currentExerciseIndex = _currentExerciseIndex! + 1;
 
-    context.go(getExerciseRoute(context));
+    context.push(getExerciseRoute(context));
   }
 
   void handlePreviousExercise(BuildContext context) {
@@ -107,13 +107,13 @@ class PhysicalExercisesViewModel extends ChangeNotifier {
 
     _currentExerciseIndex = _currentExerciseIndex! - 1;
 
-    context.go(getExerciseRoute(context));
+    context.push(getExerciseRoute(context));
   }
 
   void handleStartExercises(BuildContext context) {
     _currentExerciseIndex = 0;
 
-    context.go(getExerciseRoute(context));
+    context.push(getExerciseRoute(context));
   }
 
   void handleCompleteExercise(BuildContext context) {

@@ -9,7 +9,7 @@ class SessionTitle extends StatelessWidget {
   const SessionTitle({
     super.key,
     required this.title,
-    this.size = 28,
+    this.size = 56,
     this.subtitle,
   });
 
