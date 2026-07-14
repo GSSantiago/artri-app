@@ -16,6 +16,7 @@ class LoginViewModel extends ChangeNotifier {
   final SecurityTokenService _securityTokenService;
 
   bool _isLoading = false;
+  bool get isLoading => _isLoading;
 
   LoginViewModel(this._authService, this._securityTokenService);
 

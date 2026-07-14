@@ -26,7 +26,7 @@ class PointText extends StatelessWidget {
           ),
         ),
         SizedBox(
-          width: MediaQuery.of(context).size.width * 0.7,
+          width: MediaQuery.of(context).size.width * 0.75,
           child: (strongText == null) ? Text(
             text,
             textAlign: TextAlign.justify,

@@ -3,6 +3,7 @@ import 'package:artriapp/utils/enums/input_text_type.dart';
 import 'package:artriapp/utils/helpers/index.dart';
 import 'package:artriapp/view_models/index.dart';
 import 'package:artriapp/views/widgets/index.dart';
+import 'package:artriapp/views/widgets/loading_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
@@ -22,10 +23,26 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void initState() {
-    context.read<LoginViewModel>().atemptSharedPreferencesLogin(context);
+    LoginViewModel viewModel = context.read<LoginViewModel>();
+
+    viewModel.addListener(() {
+      if (viewModel.isLoading) {
+        showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (_) => LoadingDialog()
+        );
+      } else {
+        if (Navigator.of(context).canPop()) {
+          Navigator.of(context).pop();
+        }
+      }
+    });
+
+    viewModel.atemptSharedPreferencesLogin(context);
     super.initState();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

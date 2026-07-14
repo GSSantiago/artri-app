@@ -1,5 +1,6 @@
 import 'package:artriapp/models/index.dart';
 import 'package:artriapp/routes/settings.routes.dart';
+import 'package:artriapp/views/calendar_page/calendar_page.dart';
 import 'package:artriapp/views/index.dart';
 import 'package:go_router/go_router.dart';
 
@@ -10,6 +11,7 @@ abstract class UserDiaryRoutes implements RoutesSession {
   static const String swellingSelectionPage = '$diary/swelling-selection';
   static const String painSelectionPage = '$diary/pain-selection';
   static const String settings = '$diary/settings';
+  static const String diaryPage = '$diary/diaryPage';
 
   static List<RouteBase> getGoRoutes() => [
         ...SettingsRoutes.getGoRoutes(),
@@ -65,6 +67,12 @@ abstract class UserDiaryRoutes implements RoutesSession {
           path: settings,
           pageBuilder: (context, state) => NoTransitionPage(
             child: LoggedSettingsPage(),
+          ),
+        ),
+        GoRoute(
+          path: diaryPage,
+          pageBuilder: (context, state) => NoTransitionPage(
+            child: CalendarPage(),
           ),
         ),
       ];

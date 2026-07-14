@@ -30,8 +30,8 @@ class CustomExercisesConfirmationPage extends StatelessWidget {
                       children: [
                         Gap(24),
                         SizedBox(
-                          height: MediaQuery.of(context).size.height - 240,
-                          width: MediaQuery.of(context).size.width - 32,
+                          height: MediaQuery.of(context).size.height * 0.8,
+                          width: MediaQuery.of(context).size.width * 0.9,
                           child: DecoratedBox(
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.all(Radius.circular(32)),

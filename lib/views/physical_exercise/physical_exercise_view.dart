@@ -36,79 +36,84 @@ class PhysicalExerciseView extends StatelessWidget {
         return ClearScaffoldView(
           appBar: CustomAppBar(
             onReturn: () async {
-              bool shouldQuit = await showModalBottomSheet(
-                context: context,
-                builder: (context) => SizedBox(
-                  height: MediaQuery.of(context).size.height / 2,
-                  width: MediaQuery.of(context).size.width,
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(48)),
-                      color: Colors.white,
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                        Column(
+              if (viewModel.exercises.isNotEmpty) {
+                bool shouldQuit = await showModalBottomSheet(
+                  context: context,
+                  builder: (context) => SizedBox(
+                    height: MediaQuery.of(context).size.height / 2,
+                    width: MediaQuery.of(context).size.width,
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(48)),
+                        color: Colors.white,
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Icon(Icons.warning_amber_rounded, color: Colors.black, size: 96),
-                            Text(
-                            'ATENÇÃO!',
-                            style: GoogleFonts.montserrat(
-                              color: AppColors.darkGreen,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 32,
-                            ),
-                          ),
-                          Gap(8),
-                          Text(
-                            'Se sair agora, perderá o progresso que fez ate aqui.',
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.montserrat(
-                              fontSize: 26,
-                            ),
-                          ),
-                          ],
-                        ),
                           Column(
                             children: [
-                              Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                CustomSolidButton(
-                                  width: (MediaQuery.of(context).size.width / 2 ) - 24,
-                                  fontSize: 20,
-                                  text: 'Sair',
-                                  onPressed: () {
-                                    Navigator.pop(context, true);
-                                  },
-                                  gradientColors: AppGradients.redGradient,
-                                ),
-                                CustomSolidButton(
-                                  width: (MediaQuery.of(context).size.width / 2 ) - 24,
-                                  fontSize: 20,
-                                  horizontalPadding: 4,
-                                  text: 'Continuar',
-                                  onPressed: () {
-                                    Navigator.pop(context, false);
-                                  },
-                                  gradientColors: AppGradients.greenGradient,
-                                ),
-                              ],
+                              Icon(Icons.warning_amber_rounded, color: Colors.black, size: 96),
+                              Text(
+                              'ATENÇÃO!',
+                              style: GoogleFonts.montserrat(
+                                color: AppColors.darkGreen,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 32,
                               ),
-                                Gap(40),
+                            ),
+                            Gap(8),
+                            Text(
+                              'Se sair agora, perderá o progresso que fez ate aqui.',
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.montserrat(
+                                fontSize: 26,
+                              ),
+                            ),
                             ],
                           ),
-                      ],),
+                            Column(
+                              children: [
+                                Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  CustomSolidButton(
+                                    width: (MediaQuery.of(context).size.width / 2 ) - 24,
+                                    fontSize: 20,
+                                    text: 'Sair',
+                                    onPressed: () {
+                                      Navigator.pop(context, true);
+                                    },
+                                    gradientColors: AppGradients.redGradient,
+                                  ),
+                                  CustomSolidButton(
+                                    width: (MediaQuery.of(context).size.width / 2 ) - 24,
+                                    fontSize: 20,
+                                    horizontalPadding: 4,
+                                    text: 'Continuar',
+                                    onPressed: () {
+                                      Navigator.pop(context, false);
+                                    },
+                                    gradientColors: AppGradients.greenGradient,
+                                  ),
+                                ],
+                                ),
+                                  Gap(40),
+                              ],
+                            ),
+                        ],),
+                      ),
                     ),
                   ),
-                ),
-              );
-              if (shouldQuit) {
-                GoRouter.of(context).go('/diary');
+                );
+                if (shouldQuit) {
+                  GoRouter.of(context).go('/diary');
+                }
+              } else {
+                context.pop();
               }
+              
             },
             value: title),
           child: Column(

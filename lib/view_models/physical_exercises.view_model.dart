@@ -117,6 +117,12 @@ class PhysicalExercisesViewModel extends ChangeNotifier {
     context.push('$currentPath/${difficulty.toString()}');
   }
 
+  void resetExerciseList() {
+    _currentExerciseIndex = null;
+    _queuedExercises = [];
+    notifyListeners();
+  }
+
   Future<void> getExerciseList(TrainingType type) async {
     _selectionList = [];
     _customExerciseList = [];
