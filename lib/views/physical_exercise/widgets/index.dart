@@ -8,3 +8,4 @@ export 'exercise_set_details.dart';
 export 'exercise_set_properties.dart';
 export 'orientations_dialog.dart';
 export 'level_selector_dialog.dart';
+export 'outdoor_exercise_map_page.dart';
