@@ -2,11 +2,13 @@
 
 Um app para artrite reumatoide com features criadas pelos alunos da matéria de Desenvolvimento Móvel ministrada pelo professor André Takeshi Endo em 2026/1:
  
-Gabriel Henrique Rodrigues - 
+Gabriel Henrique Rodrigues - 813345
+
 Guilherme de Souza Santiago - 790847
+
 Lucas Gabriel Velloso - 790771
 
-Link do drive com os videos de teste do aplicativo:
+***Link do drive com os videos de teste do aplicativo***:
 https://drive.google.com/drive/folders/1hDrBeuAMP-_Bc8H98vv5iU8yZBkcIsEz?usp=sharing
 
 ## Table of contents
