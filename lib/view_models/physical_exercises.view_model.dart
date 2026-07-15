@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:artriapp/models/exercise_list_by_type.dart';
 import 'package:artriapp/models/index.dart';
 import 'package:artriapp/routes/index.dart';
 import 'package:artriapp/services/index.dart';
@@ -11,14 +12,35 @@ import 'package:go_router/go_router.dart';
 class PhysicalExercisesViewModel extends ChangeNotifier {
   TrainingType? _currentTrainingType;
   ExerciseDifficulty? _currentDifficulty;
+  ExerciseDifficulty? get currentDifficulty => _currentDifficulty;
+  List<ExerciseListByType> _selectionList = [];
+  List<Exercise> _currentPageList = [];
+  List<ExerciseListByType> get selectionList => _selectionList;
+  List<Exercise> get currentPageList => _currentPageList;
+  List<ExerciseListByType> _customExerciseList = [];
   List<ExerciseQueued> _queuedExercises = [];
   int? _currentExerciseIndex;
+  int _currentCustomTrainingPage = 0;
+  int get currentCustomTrainingPage => _currentCustomTrainingPage;
   List<ExerciseQueued> get exercises => _queuedExercises;
+  List<ExerciseListByType> get customExerciseList => _customExerciseList;
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
+
   ExerciseQueued? get currentExercise => _currentExerciseIndex == null
       ? null
       : _queuedExercises[_currentExerciseIndex ?? 0];
 
   final PhysicalExercisesService _physicalExercisesService;
+
+  final List<TrainingType> customExerciseRoutineTrainingTypeList = [
+    TrainingType.mobility,
+    TrainingType.aerobic,
+    TrainingType.inferiorBoost,
+    TrainingType.superiorBoost,
+    TrainingType.coreBoost,
+    TrainingType.stretching,
+  ];
 
   PhysicalExercisesViewModel(this._physicalExercisesService);
 
@@ -26,6 +48,38 @@ class PhysicalExercisesViewModel extends ChangeNotifier {
     _currentTrainingType = type;
 
     context.push(_getRouteForTrainingType(type));
+  }
+
+  void goToCustomTrainingPage(BuildContext context) {
+      context.push(PhysicalExerciseRoutes.selectCustomExercisesDifficulty);
+  }
+
+  void returnSelectExercisesPage() {
+    _currentCustomTrainingPage--;
+  }
+
+  void goToSelectExercises(int index, BuildContext context) {
+    if (index < _selectionList.length) {
+      _currentCustomTrainingPage = index;
+      context.push(PhysicalExerciseRoutes.selectExercises);
+    } else {
+      context.push(PhysicalExerciseRoutes.confirmationRoute);
+    }
+  }
+
+  void toggleExerciseInList(Exercise exercise) {
+    if (_customExerciseList[_currentCustomTrainingPage].exerciseList.contains(exercise)) {
+      _customExerciseList[_currentCustomTrainingPage].exerciseList.remove(exercise);
+    } else {
+      _customExerciseList[_currentCustomTrainingPage].exerciseList.add(exercise);
+    }
+
+    notifyListeners();
+  }
+
+  void setCustomExercisesDificulty(ExerciseDifficulty difficulty, BuildContext context) {
+    _currentDifficulty = difficulty;
+    context.push(PhysicalExerciseRoutes.customExercises);
   }
 
   String _getRouteForTrainingType(TrainingType type) {
@@ -43,6 +97,9 @@ class PhysicalExercisesViewModel extends ChangeNotifier {
     ExerciseDifficulty difficulty,
     BuildContext context,
   ) async {
+    _selectionList = [];
+    _customExerciseList = [];
+
     _currentDifficulty = difficulty;
 
     if (_currentTrainingType == null) {
@@ -60,6 +117,42 @@ class PhysicalExercisesViewModel extends ChangeNotifier {
     _queuedExercises = _queueExercises(exercises);
 
     context.push('$currentPath/${difficulty.toString()}');
+  }
+
+  void resetExerciseList() {
+    _currentExerciseIndex = null;
+    _queuedExercises = [];
+    notifyListeners();
+  }
+
+  Future<void> getExerciseList(TrainingType type) async {
+    _isLoading = true;
+    notifyListeners();
+    _selectionList = [];
+    _customExerciseList = [];
+    List<Exercise> _newList = [];
+    for (int i = 0; i < customExerciseRoutineTrainingTypeList.length; i++) {
+      _newList = await _physicalExercisesService.getExercisesFromTraining(
+        customExerciseRoutineTrainingTypeList[i],
+        _currentDifficulty ?? ExerciseDifficulty.easy,
+        isCustomExercise: true,
+      );
+      _selectionList.add(ExerciseListByType(exerciseList: _newList, type: customExerciseRoutineTrainingTypeList[i]));
+      _customExerciseList.add(ExerciseListByType(exerciseList: [], type: customExerciseRoutineTrainingTypeList[i]));
+    }
+    _isLoading = false;
+    notifyListeners();
+  }
+
+  void queueCustomExercises(BuildContext context) {
+    List<Exercise> allExercises = [];
+    for (int i = 0; i < customExerciseRoutineTrainingTypeList.length; i++) {
+      for (var element in _customExerciseList[i].exerciseList) {
+        allExercises.add(element);
+      }
+    }
+    _queuedExercises = _queueExercises(allExercises);
+    handleStartExercises(context);
   }
 
   List<ExerciseQueued> _queueExercises(List<Exercise> exercises) {
@@ -85,7 +178,7 @@ class PhysicalExercisesViewModel extends ChangeNotifier {
     }
 
     if (currentExercise!.isLast) {
-      context.push(PhysicalExerciseRoutes.congratulations);
+      context.go(PhysicalExerciseRoutes.congratulations);
       return;
     }
 
@@ -107,7 +200,7 @@ class PhysicalExercisesViewModel extends ChangeNotifier {
 
     _currentExerciseIndex = _currentExerciseIndex! - 1;
 
-    context.push(getExerciseRoute(context));
+    context.pop();
   }
 
   void handleStartExercises(BuildContext context) {
@@ -132,7 +225,7 @@ class PhysicalExercisesViewModel extends ChangeNotifier {
     var hasCurrentExerciseId = int.tryParse(currentPathSegments.last) != null;
     var cleanedPath = currentPath.path;
 
-    if (hasCurrentExerciseId) {
+    if (hasCurrentExerciseId || _customExerciseList.isNotEmpty) {
       cleanedPath =
           '/${currentPathSegments.sublist(0, currentPathSegments.length - 1).join('/')}';
     }
