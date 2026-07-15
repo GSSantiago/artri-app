@@ -1,6 +1,15 @@
 # Artriapp
 
-Um app para artrite reumatoide.
+Um app para artrite reumatoide com features criadas pelos alunos da matéria de Desenvolvimento Móvel ministrada pelo professor André Takeshi Endo em 2026/1:
+ 
+Gabriel Henrique Rodrigues - 813345
+
+Guilherme de Souza Santiago - 790847
+
+Lucas Gabriel Velloso - 790771
+
+***Link do drive com os videos de teste do aplicativo***:
+https://drive.google.com/drive/folders/1hDrBeuAMP-_Bc8H98vv5iU8yZBkcIsEz?usp=sharing
 
 ## Table of contents
 
@@ -23,7 +32,52 @@ samples, guidance on mobile development, and a full API reference.
 
 ## Setup the environment
 
-This project use `.env` file for communication with APIs. Make sure your `.env` file is set before start the project and following the `.env_example` file.
+### 1. Backend
+
+O app depende do [backend](https://github.com/artri-app/artri-app-api) rodando (localmente via Docker ou já publicado). Siga o `README` daquele repositório para subir a API. Por padrão ela escuta em `http://localhost:8000`.
+
+### 2. Instalar dependências do Flutter
+
+```bash
+flutter pub get
+```
+
+### 3. Configurar o `.env`
+
+O projeto usa um arquivo `.env` (baseado no `.env_example`) para configurar a URL da API:
+
+```
+API_URL="http://<host>:8000/api"
+```
+
+O valor de `<host>` depende de onde você vai rodar o app:
+
+| Onde roda o app | Valor do `<host>` |
+|---|---|
+| Emulador Android | `10.0.2.2` |
+| Dispositivo físico via USB | `localhost`,  mas antes rode `adb reverse tcp:8000 tcp:8000` (redireciona a porta do celular para a porta 8000 da sua máquina) |
+| Dispositivo físico via Wi-Fi | o IP da sua máquina na rede local (ex: `192.168.x.x`) |
+| Web / Desktop | `localhost` |
+
+### 4. Configurar a chave de API do Google Maps
+
+A feature de exercícios ao ar livre usa o `google_maps_flutter`, que precisa de uma chave de API do Google Maps (Google Cloud Console → APIs & Services → Credentials, com a "Maps SDK for Android" habilitada).
+
+Essa chave **não é versionada**, cada dev precisa adicioná-la no seu `android/local.properties`:
+
+```
+MAPS_API_KEY=sua_chave_aqui
+```
+
+Sem essa linha, o app builda normalmente, mas o mapa da tela "Ao ar livre" aparece em branco/cinza.
+
+### 5. Rodar o app
+
+Com um emulador aberto ou dispositivo conectado:
+
+```bash
+flutter run
+```
 
 # Project architecture
 
